@@ -1,2 +1,5 @@
 .venv
 path
+.DS_Store
+CLAUDE.md
+csvs
