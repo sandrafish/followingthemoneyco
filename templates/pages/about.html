@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}About #FollowtheMoneyCO{% endblock %}
+
+  
+{% block content %}
+<h1>About #FollowtheMoneyCO</h1>
+
+<p>FollowtheMoneyCO is a campaign finance data site operated by <a href="https://www.linkedin.com/in/sandrafish/" target="blank">Sandra Fish</a>. The site originated in 2020 as a joint project of the media collaborative COLab and the Colorado Sun, funded by the Colorado Media Project and the Colorado Sun.</p>
+
+<p>The project aims to make Colorado campaign finance data more accessible to journalists and the public using downloadable data from the <a href="https://tracer.sos.colorado.gov/PublicSite/Homepage.aspx" target="blank">Colorado Secretary of State’s TRACER</a>. </p>
+
+<p><strong>Need more info on querying the data?</strong> <a href="/sql" target="blank">Click here to read more</a> about using SQL.</p>
+
+<h3>The latest</h3>
+<p>This Datasette was rebuilt in late March 2026 to include only this year's statewide, state House and state Senate elections. If you'd like information from prior elections or additonal contests, let me know.</p>
+
+<h3>Where the data comes from</h3>
+
+<p>The data comes from <a href="https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx" target=“blank”>bulk downloads</a> on TRACER, the state’s campaign finance data system. </p>
+
+<p>Sandra Fish, the Colorado data journalist managing the project, uses Python, Pandas and Jupyter Lab to create the tables, which are pared down from the original and include full names for contributors and payment recipients. These names have not been standardized.</p>
+
+<p>For legislative candidates and statewide candidates, the TRACER data is merged with a list of candidate committee numbers. Other tables are created by selecting committee types.</p>
+
+<p>Information about contribution limits for various types of committees may be found on <a href="https://www.sos.state.co.us/pubs/elections/CampaignFinance/limits/acceptance.html" target=“blank”> this page,</a> from the Secretary of State’s Office. NCSL's <a href="https://www.ncsl.org/elections-and-campaigns/campaign-finance" target="_blank">campaign finance resources</a>  may also be helpful for context.</p>
+
+<p>If you have questions, requests or feedback please email fishnette(at)gmail.com</p>
+
+{% endblock %}
+
+
+

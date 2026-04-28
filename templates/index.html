@@ -1,0 +1,38 @@
+
+{% extends "base.html" %}
+
+{% block title %}#FollowtheMoneyCO{% endblock %}
+
+  
+{% block content %}
+<h1>#FollowtheMoneyCO</h1>
+{% block description_source_license %}{% include "_description_source_license.html" %}{% endblock %}
+
+<p>#FollowtheMoneyCO aims to make Colorado campaign finance data more accessible to journalists and the public using downloadable data from the Colorado Secretary of State’s TRACER system. It's compiled from <a href="https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx" target="_blank"> downloads and information on candidates and committees.</a> Please email fishnette (a) gmail.com if you see something amiss.</p>
+
+<p><strong>Quickstart:</strong> Click on campaign_finance_2026 and or one of the tables below it. Tables ending in _cont are contributions, those ending in _exp are expenses. Query the data using the dropdown menu to select, say = ASPEN from the city column. The results may be downloaded as a CSV (best for using a spreadsheet) or json file. </p>
+
+<p><strong>Need more info on queries? <a href="/sql" target="blank">Click here to read more</a></strong>  about using SQL.</p>
+
+<p><strong>See the <a href="/about" target="blank">about page</a></strong> for more details on the data and what it includes.</p>
+
+<p> Note that super PACs includes both 527 and IEC committees, and some 527s often collect money then donate that to an IEC with the same name. It's best when noting large contribution to use a SQL query that captures all the contributor's information. Some large contributions end up fully or partially refunded.</p>
+
+<p><strong>Most recent update made on March 30 for filings through Dec. 31, 2025. The next <a href="https://www.sos.state.co.us/pubs/elections/CampaignFinance/calendars/2026/stateFrequent.html" target="blank">filing dates</a> are April 15 or May 4, depending on the committee.</strong></p>
+
+<p>Questions or corrections, email fishnette (at) gmail.com.</p>
+
+<ul>
+  {% for database in all_databases_with_tables %}
+    <li>
+      <strong><a href="{{ urls.database(database.name) }}">{{ database.name }}</a></strong>
+      <ul>
+        {% for table in database.tables %}
+          <li><a href="{{ urls.table(database.name, table.name) }}">{{ table.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
