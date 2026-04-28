@@ -1,0 +1,19 @@
+{
+    "title": "#FollowTheMoneyCO",
+    "description": "Colorado state-level campaign finance data",
+    "license": "ODbL",
+    "license_url": "https://opendatacommons.org/licenses/odbl/",
+    "source": "TRACER bulk data downloads",
+    "source_url": "https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx",
+    "databases": {
+        "camp_fin_2026": {
+            "source": "Colorado Secretary of State TRACER bulk downloads",
+            "source_url": "https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx"
+        }
+    }
+     ,"plugins": {
+        "datasette-block-robots": {
+            "allow_only_index": true
+        }
+    }
+}
