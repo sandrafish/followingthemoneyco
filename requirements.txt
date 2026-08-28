@@ -1,2 +1,2 @@
-datasette==0.65.2
+datasette==0.65.3
 datasette-block-robots

@@ -1,42 +1,136 @@
-
 {% extends "base.html" %}
 
 {% block title %}#FollowtheMoneyCO{% endblock %}
 
-  
+{% block extra_head %}{% include "_ftm_styles.html" %}{% endblock %}
+
 {% block content %}
-<h1>#FollowtheMoneyCO</h1>
-{% block description_source_license %}{% include "_description_source_license.html" %}{% endblock %}
+<div class="ftm-wrap">
 
-<p>#FollowtheMoneyCO aims to make Colorado campaign finance data more accessible to journalists and the public using downloadable data from the Colorado Secretary of State’s TRACER system. It's compiled from <a href="https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx" target="_blank"> downloads and information on candidates and committees.</a> Please email fishnette (a) gmail.com if you see something amiss.</p>
+  {% set ftm_page = "home" %}
+  {% include "_ftm_nav.html" %}
 
-<p><strong>Quickstart:</strong> Click on campaign_finance_2026 and or one of the tables below it. Tables ending in _cont are contributions, those ending in _exp are expenses. Query the data using the dropdown menu to select, say = ASPEN from the city column. The results may be downloaded as a CSV (best for using a spreadsheet) or json file. </p>
+  <div class="ftm-hd">
+    <h1>#FollowtheMoneyCO</h1>
+    <p>Colorado state campaign finance data, made searchable for journalists and
+       the public. Contributions and spending for statewide, state House and
+       state Senate candidates, plus super PACs and issue committees, drawn from
+       the Secretary of State&rsquo;s TRACER system.</p>
+  </div>
 
-<p><strong>Need more info on queries? <a href="/sql" target="blank">Click here to read more</a></strong>  about using SQL.</p>
+  <div class="ftm-update">
+    <p><strong>Most recent update: Aug. 4.</strong> The next
+      <a href="https://www.sos.state.co.us/pubs/elections/CampaignFinance/calendars/2026/stateFrequent.html" target="_blank">filing date</a>
+      is Sept. 8. This is the last update that will include defeated primary
+      election candidates.</p>
+    <p>Independent spending was also updated Aug. 4. Expenditures naming
+      multiple candidates were divided equally among them.</p>
+  </div>
 
-<p><strong>See the <a href="/about" target="blank">about page</a></strong> for more details on the data and what it includes.</p>
+  <div class="ftm-grid">
 
-<p> Note that super PACs includes both 527 and IEC committees, and some 527s often collect money then donate that to an IEC with the same name. It's best when noting large contribution to use a SQL query that captures all the contributor's information. Some large contributions end up fully or partially refunded. Always use committee_type in any SQL query to differentiate the two.</p>
+    <div class="ftm-card">
+      <h2>Statewide candidates</h2>
+      <p class="ftm-meta">2026 cycle</p>
+      <p>Governor, attorney general, secretary of state, treasurer and other
+         statewide races.</p>
+      <p class="ftm-links">
+        <a href="{{ urls.table('camp_fin_2026', 'state_cont') }}">Contributions &rarr;</a>
+        <a href="{{ urls.table('camp_fin_2026', 'state_exp') }}">Expenses &rarr;</a>
+      </p>
+    </div>
 
-<p><strong>Key to note on candidates:</strong> They typically transfer cash on hand to the new election cycle, these amounts have been removed from both contribution and expense tables</p>
+    <div class="ftm-card">
+      <h2>State House</h2>
+      <p class="ftm-meta">2026 cycle, by district</p>
+      <p>Candidate committees for Colorado House districts, with the district
+         number on every row.</p>
+      <p class="ftm-links">
+        <a href="{{ urls.table('camp_fin_2026', 'house_cont') }}">Contributions &rarr;</a>
+        <a href="{{ urls.table('camp_fin_2026', 'house_exp') }}">Expenses &rarr;</a>
+      </p>
+    </div>
 
-<p><strong>Most recent update made on Aug.4. The next <a href="https://www.sos.state.co.us/pubs/elections/CampaignFinance/calendars/2026/stateFrequent.html" target="blank">filing date</a> is Sept. 8.</strong> This is the last update that will include defeated primary election candidates.</p>
+    <div class="ftm-card">
+      <h2>State Senate</h2>
+      <p class="ftm-meta">2026 cycle, by district</p>
+      <p>Candidate committees for the Colorado Senate districts on the ballot
+         this year.</p>
+      <p class="ftm-links">
+        <a href="{{ urls.table('camp_fin_2026', 'senate_cont') }}">Contributions &rarr;</a>
+        <a href="{{ urls.table('camp_fin_2026', 'senate_exp') }}">Expenses &rarr;</a>
+      </p>
+    </div>
 
-<p>Independent spending was updated Aug 4. Note that expenditures for multiple candidates were divided equally among the candidates.</p>
+    <div class="ftm-card">
+      <h2>Super PACs</h2>
+      <p class="ftm-meta">527s and independent expenditure committees</p>
+      <p>Both committee types are in one table. Always filter on
+         <code>committee_type</code> &mdash; 527s often pass money to an IEC of
+         the same name.</p>
+      <p class="ftm-links">
+        <a href="{{ urls.table('camp_fin_2026', 'super_pacs_cont') }}">Contributions &rarr;</a>
+        <a href="{{ urls.table('camp_fin_2026', 'super_pacs_exp') }}">Expenses &rarr;</a>
+      </p>
+    </div>
 
-<p>Questions or corrections, email fishnette (at) gmail.com.</p>
+    <div class="ftm-card">
+      <h2>Issue committees</h2>
+      <p class="ftm-meta">Ballot measure campaigns</p>
+      <p>Committees raising and spending money for and against statewide and
+         local ballot questions.</p>
+      <p class="ftm-links">
+        <a href="{{ urls.table('camp_fin_2026', 'issue_comm_cont') }}">Contributions &rarr;</a>
+        <a href="{{ urls.table('camp_fin_2026', 'issue_comm_exp') }}">Expenses &rarr;</a>
+      </p>
+    </div>
 
-<ul>
-  {% for database in all_databases_with_tables %}
-    <li>
-      <strong><a href="{{ urls.database(database.name) }}">{{ database.name }}</a></strong>
-      <ul>
-        {% for table in database.tables %}
-          <li><a href="{{ urls.table(database.name, table.name) }}">{{ table.name }}</a></li>
-        {% endfor %}
-      </ul>
-    </li>
-  {% endfor %}
-</ul>
+    <div class="ftm-card">
+      <h2>Independent spending</h2>
+      <p class="ftm-meta">Updated Aug. 4</p>
+      <p>Independent expenditures by committee and vendor, showing which
+         candidate each one supports or opposes.</p>
+      <p class="ftm-links">
+        <a href="{{ urls.table('camp_fin_2026', 'iec_0803') }}">Independent expenditures &rarr;</a>
+      </p>
+    </div>
 
+    <div class="ftm-card">
+      <h2>Candidate loans</h2>
+      <p class="ftm-meta">Legislative candidates</p>
+      <p>Loans to candidate committees, with repayments to date and the
+         outstanding balance.</p>
+      <p class="ftm-links">
+        <a href="{{ urls.table('camp_fin_2026', 'cand_loans') }}">Loans &rarr;</a>
+      </p>
+    </div>
+
+  </div>
+
+  <p class="ftm-more">
+    <strong>Quickstart:</strong> open any table above, then use the dropdown
+    menus to filter &mdash; for example, city <code>=</code> ASPEN. Results
+    download as CSV or JSON. Tables ending in <code>_cont</code> are
+    contributions; those ending in <code>_exp</code> are expenses. For custom
+    queries, see <a href="/sql">using SQL</a>. For what the data covers and how
+    it is built, see <a href="/about">more info</a>.
+  </p>
+
+  <p class="ftm-raw">
+    Prefer raw tables and SQL? Browse
+    {% for database in all_databases_with_tables %}<a href="{{ urls.database(database.name) }}">{{ database.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
+    &mdash;
+    {% for database in all_databases_with_tables %}{% for table in database.tables %}<a href="{{ urls.table(database.name, table.name) }}">{{ table.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}{% endfor %}.
+  </p>
+
+  <div class="ftm-note">
+    <p>Source: <a href="https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx" target="_blank">bulk
+    data downloads</a> from the Colorado Secretary of State&rsquo;s TRACER
+    system. Candidates typically transfer cash on hand into a new election
+    cycle; those amounts have been removed from both the contribution and
+    expense tables. Some large contributions are later refunded in full or in
+    part. Questions or corrections: fishnette (at) gmail.com.</p>
+  </div>
+
+</div>
 {% endblock %}

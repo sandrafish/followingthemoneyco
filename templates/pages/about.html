@@ -1,33 +1,150 @@
+{# Served at /about by Datasette's custom pages feature: any template under
+   templates/pages/ becomes a route at that path. #}
 {% extends "base.html" %}
 
-{% block title %}About #FollowtheMoneyCO{% endblock %}
+{% block title %}More info — #FollowtheMoneyCO{% endblock %}
 
-  
+{% block extra_head %}{% include "_ftm_styles.html" %}{% endblock %}
+
 {% block content %}
-<h1>About #FollowtheMoneyCO</h1>
+<div class="ftm-wrap">
 
-<p>FollowtheMoneyCO is a campaign finance data site operated by <a href="https://www.linkedin.com/in/sandrafish/" target="blank">Sandra Fish</a>. The site originated in 2020 as a joint project of the media collaborative COLab and the Colorado Sun, funded by the Colorado Media Project and the Colorado Sun.</p>
+  {% set ftm_page = "about" %}
+  {% include "_ftm_nav.html" %}
 
-<p>The project aims to make Colorado campaign finance data more accessible to journalists and the public using downloadable data from the <a href="https://tracer.sos.colorado.gov/PublicSite/Homepage.aspx" target="blank">Colorado Secretary of State’s TRACER</a>. </p>
+  <div class="ftm-hd">
+    <h1>More info</h1>
+    <p>Explorable Colorado state campaign finance data.</p>
+  </div>
 
-<p><strong>Need more info on querying the data?</strong> <a href="/sql" target="blank">Click here to read more</a> about using SQL.</p>
+  <div class="ftm-prose">
 
-<h3>The latest</h3>
-<p>This Datasette was rebuilt in late March 2026 to include only this year's statewide, state House and state Senate elections. If you'd like information from prior elections or additonal contests, let me know.</p>
+    <h2>About this site</h2>
+    <p>#FollowtheMoneyCO is a campaign finance data site operated by
+      <a href="https://www.linkedin.com/in/sandrafish/" target="_blank">Sandra Fish</a>.
+      It began in 2020 as a joint project of the media collaborative COLab and
+      the Colorado Sun, funded by the Colorado Media Project and the Colorado
+      Sun. The goal is to make Colorado campaign finance data more accessible to
+      journalists and the public.</p>
 
-<h3>Where the data comes from</h3>
+    <h2>The latest</h2>
+    <p>This Datasette was rebuilt in late March 2026 to cover only this
+      year&rsquo;s statewide, state House and state Senate elections. If you
+      would like information from prior elections or additional contests, let me
+      know.</p>
 
-<p>The data comes from <a href="https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx" target=“blank”>bulk downloads</a> on TRACER, the state’s campaign finance data system. </p>
+    <h2>Where the data comes from</h2>
+    <p>Every figure here comes from
+      <a href="https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx" target="_blank">bulk downloads</a>
+      on TRACER, the Colorado Secretary of State&rsquo;s campaign finance system.
+      Nothing is hand-entered or estimated.</p>
+    <p>The tables are built with Python, Pandas and Jupyter Lab. They are pared
+      down from the originals and include full names for contributors and
+      payment recipients. <strong>These names have not been standardized</strong>
+      &mdash; the same donor may appear several ways, so search broadly.</p>
+    <p>For legislative and statewide candidates, the TRACER data is merged with a
+      list of candidate committee numbers. The other tables are built by
+      selecting committee types.</p>
 
-<p>Sandra Fish, the Colorado data journalist managing the project, uses Python, Pandas and Jupyter Lab to create the tables, which are pared down from the original and include full names for contributors and payment recipients. These names have not been standardized.</p>
+    <h2>What is included</h2>
+    <table>
+      <thead>
+        <tr><th>Section</th><th>Tables</th><th>What it covers</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Statewide candidates</td>
+          <td><a href="/camp_fin_2026/state_cont">state_cont</a>,
+              <a href="/camp_fin_2026/state_exp">state_exp</a></td>
+          <td>Governor, attorney general, secretary of state, treasurer and other statewide offices</td>
+        </tr>
+        <tr>
+          <td>State House</td>
+          <td><a href="/camp_fin_2026/house_cont">house_cont</a>,
+              <a href="/camp_fin_2026/house_exp">house_exp</a></td>
+          <td>Candidate committees by House district</td>
+        </tr>
+        <tr>
+          <td>State Senate</td>
+          <td><a href="/camp_fin_2026/senate_cont">senate_cont</a>,
+              <a href="/camp_fin_2026/senate_exp">senate_exp</a></td>
+          <td>Candidate committees by Senate district</td>
+        </tr>
+        <tr>
+          <td>Super PACs</td>
+          <td><a href="/camp_fin_2026/super_pacs_cont">super_pacs_cont</a>,
+              <a href="/camp_fin_2026/super_pacs_exp">super_pacs_exp</a></td>
+          <td>527 committees and independent expenditure committees</td>
+        </tr>
+        <tr>
+          <td>Issue committees</td>
+          <td><a href="/camp_fin_2026/issue_comm_cont">issue_comm_cont</a>,
+              <a href="/camp_fin_2026/issue_comm_exp">issue_comm_exp</a></td>
+          <td>Ballot measure campaigns</td>
+        </tr>
+        <tr>
+          <td>Independent spending</td>
+          <td><a href="/camp_fin_2026/iec_0803">iec_0803</a></td>
+          <td>Independent expenditures, with the candidate supported or opposed</td>
+        </tr>
+        <tr>
+          <td>Candidate loans</td>
+          <td><a href="/camp_fin_2026/cand_loans">cand_loans</a></td>
+          <td>Loans to candidate committees, repayments and balances</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Tables ending in <code>_cont</code> are contributions; those ending in
+      <code>_exp</code> are expenses.</p>
 
-<p>For legislative candidates and statewide candidates, the TRACER data is merged with a list of candidate committee numbers. Other tables are created by selecting committee types.</p>
+    <h2>Super PACs and the committee_type column</h2>
+    <p>Super PACs here include both 527 committees and independent expenditure
+      committees. A 527 will often collect money and then donate it to an IEC
+      with the same name, so <strong>always filter on
+      <code>committee_type</code></strong> to tell the two apart. When writing up
+      a large contribution, use a query that captures all of the
+      contributor&rsquo;s records rather than a single row.</p>
 
-<p>Information about contribution limits for various types of committees may be found on <a href="https://www.sos.state.co.us/pubs/elections/CampaignFinance/limits/acceptance.html" target=“blank”> this page,</a> from the Secretary of State’s Office. NCSL's <a href="https://www.ncsl.org/elections-and-campaigns/campaign-finance" target="_blank">campaign finance resources</a>  may also be helpful for context.</p>
+    <h2>Caveats</h2>
+    <ul>
+      <li>Candidates typically transfer cash on hand into the new election cycle.
+        Those amounts have been removed from both the contribution and expense
+        tables.</li>
+      <li>Some large contributions are refunded in full or in part later on, and
+        appear as negative amounts.</li>
+      <li>Contributor and recipient names are not standardized.</li>
+      <li>Independent expenditures naming more than one candidate were divided
+        equally among the candidates.</li>
+    </ul>
 
-<p>If you have questions, requests or feedback please email fishnette(at)gmail.com</p>
+    <h2>Contribution limits and context</h2>
+    <p>Contribution limits for the various committee types are listed on
+      <a href="https://www.sos.state.co.us/pubs/elections/CampaignFinance/limits/acceptance.html" target="_blank">this page</a>
+      from the Secretary of State&rsquo;s office. NCSL&rsquo;s
+      <a href="https://www.ncsl.org/elections-and-campaigns/campaign-finance" target="_blank">campaign finance resources</a>
+      are useful for broader context.</p>
 
+    <h2>How often it updates</h2>
+    <p>The data is refreshed after each state
+      <a href="https://www.sos.state.co.us/pubs/elections/CampaignFinance/calendars/2026/stateFrequent.html" target="_blank">filing deadline</a>.
+      Because committees can amend earlier reports, figures for past periods may
+      change as corrections are filed.</p>
+
+    <h2>Questions and corrections</h2>
+    <p>Email fish: fishnette (at) gmail (dot) com</p>
+
+  </div>
+
+  <p class="ftm-raw">
+    Prefer raw tables and SQL? Browse
+    <a href="/camp_fin_2026">camp_fin_2026</a>, or read
+    <a href="/sql">using SQL</a>.
+  </p>
+
+  <div class="ftm-note">
+    <p>Source: <a href="https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx" target="_blank">bulk
+    data downloads</a> from the Colorado Secretary of State&rsquo;s TRACER system.</p>
+  </div>
+
+</div>
 {% endblock %}
-
-
-

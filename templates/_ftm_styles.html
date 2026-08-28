@@ -1,0 +1,102 @@
+{# Shared styling for the custom pages (index, about, sql). Kept in one file so
+   the pages cannot drift apart. Included from each page's extra_head block. #}
+<style>
+:root {
+  --ink: #16181d;
+  --muted: #5b6270;
+  --rule: #dfe3ea;
+  --card: #ffffff;
+  --bg: #f6f7f9;
+  --accent: #1f5fa9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #e8eaee;
+    --muted: #9aa3b2;
+    --rule: #2c313a;
+    --card: #1a1d23;
+    --bg: #101317;
+    --accent: #7fb2ee;
+  }
+}
+body { background: var(--bg); color: var(--ink); }
+.ftm-wrap { max-width: 900px; margin: 0 auto; padding: 1rem 1rem 3rem; }
+
+/* Header: site name on the left, section links on the right */
+.ftm-nav {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .75rem 1.25rem;
+  justify-content: space-between; padding-bottom: .75rem; margin-bottom: 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+.ftm-nav .ftm-brand { font-weight: 700; font-size: .95rem; letter-spacing: -.01em;
+  text-decoration: none; color: var(--ink); }
+.ftm-nav ul { display: flex; flex-wrap: wrap; gap: 1.1rem; list-style: none; margin: 0; padding: 0; }
+.ftm-nav a { font-size: .9rem; color: var(--accent); text-decoration: none; }
+.ftm-nav a:hover { text-decoration: underline; }
+.ftm-nav a[aria-current="page"] { color: var(--muted); text-decoration: none; cursor: default; }
+
+.ftm-hd { border-bottom: 2px solid var(--ink); padding-bottom: 1rem; margin-bottom: 1.75rem; }
+.ftm-hd h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 .5rem; letter-spacing: -.02em; }
+.ftm-hd p { margin: 0; color: var(--muted); max-width: 60ch; font-size: .98rem; }
+
+/* Update banner on the home page */
+.ftm-update {
+  background: var(--card); border: 1px solid var(--rule); border-left: 3px solid var(--accent);
+  border-radius: 8px; padding: .9rem 1.1rem; margin-bottom: 1.75rem;
+  font-size: .92rem; line-height: 1.5;
+}
+.ftm-update p { margin: 0 0 .5rem; }
+.ftm-update p:last-child { margin-bottom: 0; }
+.ftm-update a { color: var(--accent); }
+
+.ftm-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.ftm-card {
+  display: block; background: var(--card); border: 1px solid var(--rule);
+  border-radius: 10px; padding: 1.25rem; text-decoration: none; color: inherit;
+  transition: border-color .15s ease, transform .15s ease;
+}
+.ftm-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.ftm-card h2 { font-size: 1.15rem; margin: 0 0 .4rem; color: var(--accent); }
+.ftm-card .ftm-meta { font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; margin: 0 0 .6rem; }
+.ftm-card p { font-size: .9rem; color: var(--muted); margin: 0; line-height: 1.45; }
+/* Cards that hold their own links rather than being one big link */
+.ftm-card .ftm-links { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin-top: .7rem; font-size: .88rem; }
+.ftm-card .ftm-links a { color: var(--accent); text-decoration: none; }
+.ftm-card .ftm-links a:hover { text-decoration: underline; }
+
+/* Long-form text on the about and SQL pages */
+.ftm-prose { max-width: 68ch; }
+.ftm-prose h2 { font-size: 1.2rem; margin: 2rem 0 .6rem; letter-spacing: -.01em; }
+.ftm-prose h2:first-of-type { margin-top: 1rem; }
+.ftm-prose p, .ftm-prose li { font-size: .96rem; line-height: 1.6; color: var(--ink); }
+.ftm-prose p { margin: 0 0 .9rem; }
+.ftm-prose ul, .ftm-prose ol { margin: 0 0 .9rem; padding-left: 1.2rem; }
+.ftm-prose li { margin-bottom: .35rem; }
+.ftm-prose a { color: var(--accent); }
+.ftm-prose table { border-collapse: collapse; margin: 0 0 1.2rem; font-size: .9rem; width: 100%; }
+.ftm-prose th, .ftm-prose td { text-align: left; padding: .45rem .7rem; border-bottom: 1px solid var(--rule); }
+.ftm-prose th { font-weight: 600; }
+.ftm-prose pre {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 8px;
+  padding: .9rem 1rem; margin: 0 0 1.2rem; overflow-x: auto;
+}
+.ftm-prose pre code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .85rem; line-height: 1.55; color: var(--ink); white-space: pre;
+}
+
+/* Inline code, used for column and table names */
+.ftm-card code, .ftm-more code, .ftm-prose code, .ftm-note code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .88em; background: var(--bg); border: 1px solid var(--rule);
+  border-radius: 4px; padding: .05em .32em;
+}
+.ftm-prose pre code { background: none; border: 0; padding: 0; font-size: .85rem; }
+
+.ftm-more { margin-top: 1.75rem; font-size: .95rem; color: var(--muted); }
+.ftm-more a { color: var(--accent); }
+.ftm-raw { margin-top: 1.5rem; font-size: .85rem; }
+.ftm-raw a { color: var(--accent); }
+.ftm-note { margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: .85rem; color: var(--muted); }
+.ftm-note a { color: var(--accent); }
+</style>
