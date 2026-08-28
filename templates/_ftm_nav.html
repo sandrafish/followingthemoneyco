@@ -1,0 +1,11 @@
+{# Site header, shared by the index, about and SQL pages. Set ftm_page in the
+   including template ("home", "about" or "sql") to mark the current link. #}
+<nav class="ftm-nav">
+  <a class="ftm-brand" href="/">#FollowtheMoneyCO</a>
+  <ul>
+    <li>{% if ftm_page == "home" %}<a aria-current="page">Home</a>{% else %}<a href="/">Home</a>{% endif %}</li>
+    <li><a href="/camp_fin_2026">Browse data</a></li>
+    <li>{% if ftm_page == "sql" %}<a aria-current="page">Using SQL</a>{% else %}<a href="/sql">Using SQL</a>{% endif %}</li>
+    <li>{% if ftm_page == "about" %}<a aria-current="page">More info</a>{% else %}<a href="/about">More info</a>{% endif %}</li>
+  </ul>
+</nav>

@@ -1,49 +1,96 @@
+{# Served at /sql by Datasette's custom pages feature. #}
 {% extends "base.html" %}
 
-{% block title %}Using SQL{% endblock %}
+{% block title %}Using SQL — #FollowtheMoneyCO{% endblock %}
 
-  
+{% block extra_head %}{% include "_ftm_styles.html" %}{% endblock %}
+
 {% block content %}
+<div class="ftm-wrap">
 
-<h1>Using SQL</h1>
-<p>FollowtheMoneyCO is a joint project of the media collaborative COLab and the Colorado Sun, funded by the Colorado Media Project and the Colorado Sun.</p>
+  {% set ftm_page = "sql" %}
+  {% include "_ftm_nav.html" %}
 
-<p>The project aims to make Colorado campaign finance data more accessible to journalists and the public using downloadable data from the Colorado Secretary of State’s TRACER. </p>
+  <div class="ftm-hd">
+    <h1>Using SQL</h1>
+    <p>How to filter a table with the dropdown menus, and how to write your own
+       queries when the dropdowns are not enough.</p>
+  </div>
 
-<p>Datasette, software designed by Stanford University Knight fellow <a href="https://simonwillison.net/" target="blank">Simon Willison</a>, is the foundation for this site. It uses SQLite, database software that uses structured query language to interviewthe data.</p>
+  <div class="ftm-prose">
 
-<p>Here's how it works. First select a column such as city.</p>
+    <h2>What this site runs on</h2>
+    <p>The site is built with Datasette, software designed by Stanford
+      University Knight fellow <a href="https://simonwillison.net/" target="_blank">Simon Willison</a>.
+      It sits on top of SQLite, a database that uses structured query language
+      &mdash; SQL &mdash; to ask questions of the data.</p>
 
-<p>Then select an operator. The = will match exactly, the != will get everything that doesn't match exactly. Contains, ends with or starts with may be the most valuable operaters, especially with names. Use the more than, less than, etc. on contribution amounts.</p>
+    <h2>Filtering with the dropdowns</h2>
+    <p>Open any table and you get three dropdowns. They are the fastest way in,
+      and you do not need to write any SQL to use them.</p>
+    <ol>
+      <li><strong>Pick a column</strong>, such as <code>city</code>.</li>
+      <li><strong>Pick an operator.</strong> <code>=</code> matches exactly and
+        <code>!=</code> returns everything that does not. <em>Contains</em>,
+        <em>starts with</em> and <em>ends with</em> are the most useful for
+        names. Use the greater-than and less-than operators on contribution
+        amounts.</li>
+      <li><strong>Type a search term.</strong> This field is case sensitive:
+        <code>denver</code> returns nothing, while <code>Denver</code> returns
+        results.</li>
+    </ol>
+    <p>You can filter on several columns at once &mdash; for example a committee
+      name plus amounts over 10,000.</p>
 
-<p>Select a search term in the third column. This column is case sensitive, so searching for denver will return nothing. While Denver will return results.</p>
+    <h2>Writing your own queries</h2>
+    <p>This one pulls contributors from the state House contribution table, sums
+      each donor&rsquo;s giving and sorts from largest to smallest. Keep in mind
+      that names are not standardized, so one donor may appear under several
+      spellings.</p>
+<pre><code>select contributor, sum(contribution_amount) as total
+from house_cont
+group by contributor
+order by total desc</code></pre>
 
-<p>You may search by multiple columns, such as committee names and amounts over 10,000.</p>
+    <p>To get totals by district:</p>
+<pre><code>select District, candidate_name, Party,
+       sum(contribution_amount) as total
+from house_cont
+group by District, candidate_name, Party
+order by total desc</code></pre>
 
-<p>You may also create custom queries. Here's one that selects contributors from the education candidate contribution table, the sum of contributions for that donor, ordered by the sum descending. Though keep in mind names aren't standardized here</p>
-<pre>
-    <code>
-        select contributor, sum(contribution_amount) as total
-        from house_cont
-        group by contributor
-        order by total desc
-</code>
-</pre>
+    <p>Super PACs need one extra step. The table holds both 527 committees and
+      independent expenditure committees, and a 527 often passes money to an IEC
+      of the same name &mdash; so group by <code>committee_type</code> to keep
+      the two apart:</p>
+<pre><code>select committee, committee_type, sum(contribution_amount) as total
+from super_pacs_cont
+group by committee, committee_type
+order by total desc</code></pre>
 
-<p>To get totals by district:</p>
-<pre>
-    <code>
-        select District, candidate_name, Party,sum(contribution_amount) as total
-        from house_cont
-        group by District, candidate_name, Party
-        order by total desc
-    </code>
-</pre>
+    <h2>Downloading results</h2>
+    <p>Any set of results can be downloaded as CSV, best for a spreadsheet, or
+      as JSON. If you are saving a CSV, use the <em>advanced</em> export option
+      and click &ldquo;download file.&rdquo;</p>
 
-<p><a href="https://a-gentle-introduction-to-sql.readthedocs.io/en/latest/index.html" target="blank">This is a good tutorial on SQL.</a></p>
+    <h2>Learning more</h2>
+    <p><a href="https://a-gentle-introduction-to-sql.readthedocs.io/en/latest/index.html" target="_blank">A Gentle Introduction to SQL</a>
+      is a good tutorial if you want to go further.</p>
 
-<p>Search results may be downloaded as a CSV (best for using a spreadsheet) or json file. If you're saving as a CSV, it's best to go to the "advanced" export and click on "download file."</p>
+    <h2>Questions and suggestions</h2>
+    <p>Email fish: fishnette (at) gmail (dot) com</p>
 
-<p>Questions? Suggestions? email fishnette(at)gmail.com</p>
+  </div>
 
+  <p class="ftm-raw">
+    Ready to try it? Browse <a href="/camp_fin_2026">camp_fin_2026</a>, or see
+    <a href="/about">more info</a> on what the data covers.
+  </p>
+
+  <div class="ftm-note">
+    <p>Source: <a href="https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx" target="_blank">bulk
+    data downloads</a> from the Colorado Secretary of State&rsquo;s TRACER system.</p>
+  </div>
+
+</div>
 {% endblock %}
