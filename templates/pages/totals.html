@@ -1,0 +1,96 @@
+{# Served at /totals. The chart data comes from plugins/totals.py via the
+   extra_template_vars hook, which fires for templates under pages/. #}
+{% extends "base.html" %}
+
+{% block title %}Totals — #FollowtheMoneyCO{% endblock %}
+
+{% block extra_head %}{% include "_ftm_styles.html" %}{% endblock %}
+
+{% block content %}
+<div class="ftm-wrap">
+
+  {% set ftm_page = "totals" %}
+  {% include "_ftm_nav.html" %}
+
+  <div class="ftm-hd">
+    <h1>Totals</h1>
+    <p>Who has raised and spent the most. Candidate charts group by race so you
+       can see the field in each contest; super PAC and issue committee charts
+       are a straight ranking. Totals are net of refunds.</p>
+  </div>
+
+  {% for chart in charts %}
+  <div class="ftm-chart{% if chart.kind == "ranked" %} ranked{% endif %}">
+    <h2>{{ chart.title }}</h2>
+    <p class="ftm-sub">{{ chart.subtitle }} &middot; longest bar = {{ chart.scale_fmt }}</p>
+
+    {% if chart.legend %}
+    <ul class="ftm-legend">
+      {% for item in chart.legend %}
+      <li><span class="ftm-swatch ftm-sw-{{ item.cls }}"></span>{{ item.label }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if chart.empty %}
+      <p class="ftm-sub">No data in this table yet.</p>
+
+    {% elif chart.kind == "grouped" %}
+      {% for race in chart.groups %}
+      <div class="ftm-race">
+        <div class="ftm-race-hd">
+          <span class="ftm-race-name">{{ race.race }}</span>
+          <span class="ftm-race-total">{{ race.total_fmt }}</span>
+        </div>
+        <div class="ftm-bars">
+          {% for item in race["items"] %}
+          <div class="ftm-bar-row">
+            <span class="ftm-bar-label" title="{{ item.tooltip }}">
+              <span class="ftm-tag">{{ item.party_mark }}</span>{{ item.name }}
+            </span>
+            <span class="ftm-track">
+              <span class="ftm-fill {{ item.party_cls }}" style="width: {{ item.pct }}%"
+                    title="{{ item.tooltip }}"></span>
+            </span>
+            <span class="ftm-bar-value">{{ item.total_fmt }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+
+    {% else %}
+      <div class="ftm-bars">
+        {% for item in chart["items"] %}
+        <div class="ftm-bar-row">
+          <span class="ftm-bar-label" title="{{ item.tooltip }}">{{ item.name }}</span>
+          <span class="ftm-track">
+            <span class="ftm-fill {{ item.type_cls }}" style="width: {{ item.pct }}%"
+                  title="{{ item.tooltip }}"></span>
+          </span>
+          <span class="ftm-bar-value">{{ item.total_fmt }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <p class="ftm-chart-ft">
+      Every number here comes from
+      <a href="{{ urls.table(db_name, chart.table) }}">{{ chart.table }}</a> &mdash;
+      open it to see the rows behind a total, or to sort and filter yourself.
+    </p>
+  </div>
+  {% endfor %}
+
+  <div class="ftm-note">
+    <p>Totals are the sum of every itemized row in each table, so refunds and
+    returned contributions are subtracted. Contributions under the itemization
+    threshold are not included. A 527 and an independent expenditure committee
+    with the same name are counted separately, because they are separate
+    committees. Source:
+    <a href="https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx" target="_blank">bulk
+    data downloads</a> from the Colorado Secretary of State&rsquo;s TRACER system.</p>
+  </div>
+
+</div>
+{% endblock %}
