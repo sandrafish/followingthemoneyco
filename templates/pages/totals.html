@@ -17,6 +17,12 @@
     <p>Who has raised and spent the most. Candidate charts group by race so you
        can see the field in each contest; the issue committee charts are a
        straight ranking. Totals are net of refunds.</p>
+    <p><strong>Contribution totals do not include candidate loans.</strong>
+       TRACER files loans separately from contributions, and they are not
+       merged here &mdash; a candidate who lent their own campaign money will
+       show a lower total than they actually had to spend. See
+       <a href="{{ urls.table(db_name, 'cand_loans') }}">cand_loans</a> for
+       every loan, what has been repaid and what is still outstanding.</p>
   </div>
 
   {% for chart in charts %}
