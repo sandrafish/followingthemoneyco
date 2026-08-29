@@ -15,8 +15,8 @@
   <div class="ftm-hd">
     <h1>Totals</h1>
     <p>Who has raised and spent the most. Candidate charts group by race so you
-       can see the field in each contest; super PAC and issue committee charts
-       are a straight ranking. Totals are net of refunds.</p>
+       can see the field in each contest; the issue committee charts are a
+       straight ranking. Totals are net of refunds.</p>
   </div>
 
   {% for chart in charts %}
@@ -85,9 +85,11 @@
   <div class="ftm-note">
     <p>Totals are the sum of every itemized row in each table, so refunds and
     returned contributions are subtracted. Contributions under the itemization
-    threshold are not included. A 527 and an independent expenditure committee
-    with the same name are counted separately, because they are separate
-    committees. Source:
+    threshold are not included. Super PACs are not charted here yet, because a
+    527 and an independent expenditure committee of the same name are separate
+    committees and have not been classified &mdash; see
+    <a href="{{ urls.table(db_name, 'super_pacs_cont') }}">super_pacs_cont</a>
+    for those rows. Source:
     <a href="https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx" target="_blank">bulk
     data downloads</a> from the Colorado Secretary of State&rsquo;s TRACER system.</p>
   </div>

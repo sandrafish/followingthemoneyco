@@ -94,30 +94,30 @@ body { background: var(--bg); color: var(--ink); }
 .ftm-prose pre code { background: none; border: 0; padding: 0; font-size: .85rem; }
 
 /* ---- Totals charts -------------------------------------------------------
-   Series colors are the validated palette: blue/red for the two major parties
-   (the conventional reading) and blue/orange for committee type. Both pairs
-   clear the CVD, normal-vision and contrast gates in light and dark. Third
-   parties share a neutral swatch and carry a direct label instead. */
+   Blue/red for the two major parties is the conventional reading and clears
+   the CVD, normal-vision and contrast gates in light and dark; third parties
+   share a neutral swatch and carry their own initial as a label. Issue
+   committees are one series in #663399, which passes on the light surface but
+   sits below the dark band, so dark mode uses a lighter step of the same hue. */
 .ftm-chart {
   background: var(--card); border: 1px solid var(--rule); border-radius: 10px;
   padding: 1.25rem; margin-bottom: 1.25rem;
   --s-d: #2a78d6;  /* Democratic */
   --s-r: #e34948;  /* Republican */
   --s-o: #64748b;  /* other parties */
-  --s-c1: #2a78d6; /* committee type 1 */
-  --s-c2: #eb6834; /* committee type 2 */
+  --s-c1: #663399; /* issue committees (single series) */
   --track: #eef0f4;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .ftm-chart {
     --s-d: #3987e5; --s-r: #e66767; --s-o: #94a3b8;
-    --s-c1: #3987e5; --s-c2: #d95926;
+    --s-c1: #8a5cd0;
     --track: #23272f;
   }
 }
 :root[data-theme="dark"] .ftm-chart {
   --s-d: #3987e5; --s-r: #e66767; --s-o: #94a3b8;
-  --s-c1: #3987e5; --s-c2: #d95926;
+  --s-c1: #8a5cd0;
   --track: #23272f;
 }
 
@@ -159,12 +159,10 @@ body { background: var(--bg); color: var(--ink); }
 .ftm-fill.r  { background: var(--s-r); }
 .ftm-fill.o  { background: var(--s-o); }
 .ftm-fill.c1 { background: var(--s-c1); }
-.ftm-fill.c2 { background: var(--s-c2); }
 .ftm-sw-d  { background: var(--s-d); }
 .ftm-sw-r  { background: var(--s-r); }
 .ftm-sw-o  { background: var(--s-o); }
 .ftm-sw-c1 { background: var(--s-c1); }
-.ftm-sw-c2 { background: var(--s-c2); }
 .ftm-bar-value { font-size: .8rem; color: var(--muted); text-align: right;
   font-variant-numeric: tabular-nums; white-space: nowrap; }
 
