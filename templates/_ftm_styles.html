@@ -93,6 +93,99 @@ body { background: var(--bg); color: var(--ink); }
 }
 .ftm-prose pre code { background: none; border: 0; padding: 0; font-size: .85rem; }
 
+/* ---- Totals charts -------------------------------------------------------
+   Series colors are the validated palette: blue/red for the two major parties
+   (the conventional reading) and blue/orange for committee type. Both pairs
+   clear the CVD, normal-vision and contrast gates in light and dark. Third
+   parties share a neutral swatch and carry a direct label instead. */
+.ftm-chart {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 10px;
+  padding: 1.25rem; margin-bottom: 1.25rem;
+  --s-d: #2a78d6;  /* Democratic */
+  --s-r: #e34948;  /* Republican */
+  --s-o: #64748b;  /* other parties */
+  --s-c1: #2a78d6; /* committee type 1 */
+  --s-c2: #eb6834; /* committee type 2 */
+  --track: #eef0f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ftm-chart {
+    --s-d: #3987e5; --s-r: #e66767; --s-o: #94a3b8;
+    --s-c1: #3987e5; --s-c2: #d95926;
+    --track: #23272f;
+  }
+}
+:root[data-theme="dark"] .ftm-chart {
+  --s-d: #3987e5; --s-r: #e66767; --s-o: #94a3b8;
+  --s-c1: #3987e5; --s-c2: #d95926;
+  --track: #23272f;
+}
+
+.ftm-chart h2 { font-size: 1.1rem; margin: 0 0 .2rem; letter-spacing: -.01em; }
+.ftm-chart .ftm-sub { font-size: .82rem; color: var(--muted); margin: 0 0 .9rem; }
+
+.ftm-legend { display: flex; flex-wrap: wrap; gap: .3rem 1rem; margin: 0 0 1rem;
+  font-size: .8rem; color: var(--muted); list-style: none; padding: 0; }
+.ftm-legend li { display: flex; align-items: center; gap: .35rem; }
+.ftm-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; flex: none; }
+
+/* Race header, then its candidates */
+.ftm-race { margin: 0 0 1rem; }
+.ftm-race:last-child { margin-bottom: 0; }
+.ftm-race-hd {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+  border-bottom: 1px solid var(--rule); padding-bottom: .25rem; margin-bottom: .45rem;
+}
+.ftm-race-hd .ftm-race-name { font-size: .84rem; font-weight: 600; letter-spacing: .01em; }
+.ftm-race-hd .ftm-race-total { font-size: .8rem; color: var(--muted);
+  font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* One bar: label / track / value. 2px row gap keeps adjacent fills apart. */
+.ftm-bars { display: grid; gap: 2px; }
+.ftm-bar-row {
+  display: grid; grid-template-columns: minmax(0, 13rem) 1fr minmax(0, 5rem);
+  align-items: center; gap: .6rem; padding: 1px 0;
+}
+.ftm-bar-label { font-size: .85rem; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; display: flex; align-items: center; gap: .35rem; }
+.ftm-bar-label .ftm-tag {
+  font-size: .68rem; font-weight: 700; color: var(--muted);
+  border: 1px solid var(--rule); border-radius: 3px; padding: 0 .22rem; flex: none;
+}
+.ftm-track { display: block; background: var(--track); border-radius: 3px;
+  height: 14px; overflow: hidden; }
+.ftm-fill { display: block; height: 100%; border-radius: 0 4px 4px 0; min-width: 2px; }
+.ftm-fill.d  { background: var(--s-d); }
+.ftm-fill.r  { background: var(--s-r); }
+.ftm-fill.o  { background: var(--s-o); }
+.ftm-fill.c1 { background: var(--s-c1); }
+.ftm-fill.c2 { background: var(--s-c2); }
+.ftm-sw-d  { background: var(--s-d); }
+.ftm-sw-r  { background: var(--s-r); }
+.ftm-sw-o  { background: var(--s-o); }
+.ftm-sw-c1 { background: var(--s-c1); }
+.ftm-sw-c2 { background: var(--s-c2); }
+.ftm-bar-value { font-size: .8rem; color: var(--muted); text-align: right;
+  font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Committee names run long -- give the ranked charts a wider label column and
+   let them wrap rather than truncating mid-name. */
+.ftm-chart.ranked .ftm-bar-row { grid-template-columns: minmax(0, 19rem) 1fr minmax(0, 5rem);
+  align-items: center; }
+.ftm-chart.ranked .ftm-bar-label { white-space: normal; overflow: visible;
+  line-height: 1.25; padding: .15rem 0; }
+
+.ftm-chart-ft { margin: 1rem 0 0; padding-top: .7rem; border-top: 1px solid var(--rule);
+  font-size: .8rem; color: var(--muted); }
+.ftm-chart-ft a { color: var(--accent); }
+
+@media (max-width: 620px) {
+  /* Stack the label above its bar rather than truncating names on a phone */
+  .ftm-bar-row { grid-template-columns: 1fr auto; gap: .15rem .6rem; }
+  .ftm-bar-label { grid-column: 1 / -1; white-space: normal; }
+  .ftm-bar-value { text-align: right; }
+}
+
 .ftm-more { margin-top: 1.75rem; font-size: .95rem; color: var(--muted); }
 .ftm-more a { color: var(--accent); }
 .ftm-raw { margin-top: 1.5rem; font-size: .85rem; }

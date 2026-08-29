@@ -37,6 +37,7 @@ fi
 
 echo
 echo "  home       http://127.0.0.1:$PORT/"
+echo "  totals     http://127.0.0.1:$PORT/totals"
 echo "  using sql  http://127.0.0.1:$PORT/sql"
 echo "  more info  http://127.0.0.1:$PORT/about"
 echo "  raw data   http://127.0.0.1:$PORT/camp_fin_2026"
