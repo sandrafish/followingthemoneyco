@@ -9,8 +9,11 @@ database only changes on redeploy, which restarts the process.
 from datasette import hookimpl
 
 DB = "camp_fin_2026"
-TOP_RACES = 20
 TOP_COMMITTEES = 20
+
+# Regent and state Board of Education races raise little next to the four
+# statewide offices, so they are left out of the statewide chart.
+STATEWIDE_SKIP = ("CU_District", "Bd. Ed.")
 
 _cache = {}
 
@@ -50,7 +53,7 @@ def _pct(value, scale):
 
 
 async def candidate_chart(db, *, table, race_col, amount_col, title, subtitle,
-                          party_from=None):
+                          top, party_from=None, skip_prefixes=()):
     """Top races, each broken out by candidate.
 
     All bars share one scale (the largest single candidate total in the chart)
@@ -80,6 +83,8 @@ async def candidate_chart(db, *, table, race_col, amount_col, title, subtitle,
     races = {}
     for row in (await db.execute(sql)).rows:
         race = row["race"] or "(not stated)"
+        if any(race.startswith(prefix) for prefix in skip_prefixes):
+            continue
         entry = races.setdefault(race, {"race": race, "total": 0.0, "items": []})
         total = float(row["total"] or 0)
         cls, mark, label = party_bucket(row["party"])
@@ -93,7 +98,7 @@ async def candidate_chart(db, *, table, race_col, amount_col, title, subtitle,
             "party_label": label,
         })
 
-    top = sorted(races.values(), key=lambda r: r["total"], reverse=True)[:TOP_RACES]
+    top = sorted(races.values(), key=lambda r: r["total"], reverse=True)[:top]
     scale = max((i["total"] for r in top for i in r["items"]), default=0)
 
     for race in top:
@@ -187,25 +192,31 @@ async def build_charts(datasette):
     charts = []
 
     candidates = [
-        ("Statewide candidates", "Office", "state_cont", "state_exp", None),
-        ("State House", "District", "house_cont", "house_exp", "house_cont"),
-        ("State Senate", "District", "senate_cont", "senate_exp", None),
+        ("Statewide candidates", "Office", "state_cont", "state_exp", None,
+         20, STATEWIDE_SKIP),
+        ("State House", "District", "house_cont", "house_exp", "house_cont",
+         15, ()),
+        ("State Senate", "District", "senate_cont", "senate_exp", None,
+         15, ()),
     ]
-    for label, race_col, cont, exp, party_from in candidates:
+    for label, race_col, cont, exp, party_from, top, skip in candidates:
+        span = "Races" if skip else f"Top {top} races"
         charts.append(await candidate_chart(
             db, table=cont, race_col=race_col, amount_col="contribution_amount",
-            title=f"{label} — contributions",
-            subtitle=f"Top {TOP_RACES} races by money raised, broken out by candidate",
+            title=f"{label} — contributions", top=top, skip_prefixes=skip,
+            subtitle=f"{span} by money raised, broken out by candidate",
         ))
         charts.append(await candidate_chart(
             db, table=exp, race_col=race_col, amount_col="expenditure_amount",
-            title=f"{label} — expenditures",
-            subtitle=f"Top {TOP_RACES} races by money spent, broken out by candidate",
+            title=f"{label} — expenditures", top=top, skip_prefixes=skip,
+            subtitle=f"{span} by money spent, broken out by candidate",
             party_from=party_from,
         ))
 
+    # Super PACs are left out until the 527 / IEC classification is settled --
+    # a 527 and an IEC of the same name are different committees, and merging
+    # them would double count.
     committees = [
-        ("Super PACs", "super_pacs_cont", "super_pacs_exp", True),
         ("Issue committees", "issue_comm_cont", "issue_comm_exp", False),
     ]
     for label, cont, exp, split_type in committees:
