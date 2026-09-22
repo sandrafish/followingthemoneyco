@@ -13,9 +13,15 @@ cd "$(dirname "$0")"
 
 PORT="${1:-8010}"
 
+# Only the gzipped copy is committed, so a fresh clone has no .db yet. Build it
+# the same way build.sh does on the host.
 if [ ! -f camp_fin_2026.db ]; then
-  echo "camp_fin_2026.db not found in $(pwd)" >&2
-  exit 1
+  if [ ! -f camp_fin_2026.db.gz ]; then
+    echo "neither camp_fin_2026.db nor camp_fin_2026.db.gz found in $(pwd)" >&2
+    exit 1
+  fi
+  echo "decompressing camp_fin_2026.db.gz"
+  gzip -dc camp_fin_2026.db.gz > camp_fin_2026.db
 fi
 
 # Bail out early on a busy port. Without this the bind fails after startup and

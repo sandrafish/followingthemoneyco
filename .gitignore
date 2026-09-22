@@ -5,3 +5,8 @@ CLAUDE.md
 csvs
 old
 
+# The raw database is never committed -- only camp_fin_2026.db.gz, which
+# build.sh decompresses on the host. Regenerate it with ./compress-db.sh
+*.db
+*.db-shm
+*.db-wal
