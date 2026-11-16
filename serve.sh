@@ -37,7 +37,7 @@ if [ -x .venv/bin/datasette ]; then
 elif command -v datasette >/dev/null 2>&1; then
   DATASETTE=datasette
 else
-  echo "datasette not found -- try: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt" >&2
+  echo "datasette not found -- try: uv venv && uv pip install -r requirements.txt" >&2
   exit 1
 fi
 
